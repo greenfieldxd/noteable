@@ -47,7 +47,6 @@ dependencies {
     implementation(libs.androidx.ui.text.google.fonts)
 
     //Navigation
-    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.compose.destinations)
     ksp(libs.compose.destinations.ksp)

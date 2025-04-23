@@ -18,11 +18,11 @@ interface NoteDao {
     fun getNoteById(id: Long): Flow<NoteEntity>
 
     @Insert
-    fun insertNote(noteEntity: NoteEntity)
+    suspend fun insertNote(noteEntity: NoteEntity)
 
     @Update
-    fun updateNote(noteEntity: NoteEntity)
+    suspend fun updateNote(noteEntity: NoteEntity)
 
     @Delete
-    fun deleteNote(noteEntity: NoteEntity)
+    suspend fun deleteNote(noteEntity: NoteEntity)
 }
