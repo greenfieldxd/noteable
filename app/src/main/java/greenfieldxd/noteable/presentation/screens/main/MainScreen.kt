@@ -45,7 +45,7 @@ fun MainScreen(
     navigator: DestinationsNavigator,
     viewModel: MainViewModel = hiltViewModel()
 ) {
-    val allNotes by viewModel.allNotes.collectAsState(initial = emptyList())
+    val screenState by viewModel.screenState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -71,25 +71,28 @@ fun MainScreen(
             )
         },
         content = { innerPadding ->
-            if (allNotes.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(stringResource(R.string.notes_empty))
+            when (val state = screenState) {
+                is MainScreenState.Content -> {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                            .padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(state.notes, key = { it.id }) { note ->
+                            NoteItem(note = note)
+                        }
+                    }
                 }
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                        .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(allNotes, key = { it.id }) { note ->
-                        NoteItem(note = note)
+                MainScreenState.Empty -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(stringResource(R.string.notes_empty), style = MaterialTheme.typography.titleSmall)
                     }
                 }
             }
