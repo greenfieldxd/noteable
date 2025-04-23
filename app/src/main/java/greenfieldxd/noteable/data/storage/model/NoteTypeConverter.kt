@@ -1,7 +1,7 @@
 package greenfieldxd.noteable.data.storage.model
 
-import android.graphics.Color
-import androidx.core.graphics.toColor
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.room.TypeConverter
 
 class NoteTypeConverter {
@@ -15,5 +15,5 @@ class NoteTypeConverter {
     fun fromNoteColor(value: Color): Int = value.toArgb()
 
     @TypeConverter
-    fun toNoteColor(value: Int): Color = value.toColor()
+    fun toNoteColor(value: Int): Color = Color(value)
 }
