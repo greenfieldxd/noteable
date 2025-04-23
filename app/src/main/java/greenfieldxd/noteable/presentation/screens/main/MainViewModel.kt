@@ -14,20 +14,6 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
     val allNotes = noteRepository.getAllNotes()
 
-    fun getNoteById(id: Long)= noteRepository.getNoteById(id)
-
-    fun insertNote(note: Note) {
-        viewModelScope.launch {
-            noteRepository.insertNote(note)
-        }
-    }
-
-    fun updateNote(note: Note) {
-        viewModelScope.launch {
-            noteRepository.insertNote(note)
-        }
-    }
-
     fun deleteNote(note: Note) {
         viewModelScope.launch {
             noteRepository.deleteNote(note)

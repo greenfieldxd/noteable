@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">noteable</string>
+    <string name="notes_title">Заметки</string>
+    <string name="notes_empty">Заметок пока нет</string>
 </resources>

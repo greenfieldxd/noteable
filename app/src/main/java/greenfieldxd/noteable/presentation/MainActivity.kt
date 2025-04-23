@@ -20,12 +20,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             NoteableTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    DestinationsNavHost(
-                        navGraph = NavGraphs.root,
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                DestinationsNavHost(navGraph = NavGraphs.root)
             }
         }
     }
