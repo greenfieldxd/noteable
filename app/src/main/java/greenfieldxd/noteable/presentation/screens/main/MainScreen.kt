@@ -1,5 +1,6 @@
 package greenfieldxd.noteable.presentation.screens.main
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,10 +37,11 @@ import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import greenfieldxd.noteable.R
 import greenfieldxd.noteable.data.repository.FakeNoteRepository
 import greenfieldxd.noteable.domain.model.Note
+import greenfieldxd.noteable.presentation.DefaultTransitions
 import greenfieldxd.noteable.presentation.theme.NoteableTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Destination<RootGraph>(start = true)
+@Destination<RootGraph>(start = true, style = DefaultTransitions::class)
 @Composable
 fun MainScreen(
     navigator: DestinationsNavigator,
@@ -81,7 +83,7 @@ fun MainScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(state.notes, key = { it.id }) { note ->
-                            NoteItem(note = note)
+                            NoteItem(note = note, onClick = { navigator.navigate(EditScreenDestination(id = note.id)) })
                         }
                     }
                 }
@@ -101,9 +103,14 @@ fun MainScreen(
 }
 
 @Composable
-fun NoteItem(note: Note) {
+fun NoteItem(
+    note: Note,
+    onClick: () -> Unit
+) {
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
     ) {
         Column(modifier = Modifier
             .fillMaxWidth()

@@ -12,3 +12,13 @@ data class Note(
     val color: Color,
     val updatedAt: Long
 )
+
+fun defaultNote() = Note(
+    id = 0L,
+    title = "Новая заметка",
+    content = "",
+    pinned = false,
+    noteType = NoteType.Plain,
+    color = Color.Unspecified,
+    updatedAt = System.currentTimeMillis()
+)
