@@ -3,18 +3,35 @@ package greenfieldxd.noteable.presentation.screens.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import greenfieldxd.noteable.data.repository.NoteRepository
+import greenfieldxd.noteable.domain.model.Note
+import greenfieldxd.noteable.domain.usecase.DeleteNoteUseCase
+import greenfieldxd.noteable.domain.usecase.GetNotesUseCase
+import greenfieldxd.noteable.domain.usecase.SaveNoteUseCase
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+sealed class MainScreenState {
+    data object Empty: MainScreenState()
+    data class Content(val notes: List<Note>): MainScreenState()
+}
+
+sealed class MainScreenAction {
+    data class Delete(val id: Long) : MainScreenAction()
+    data class Pin(val id: Long, val value: Boolean) : MainScreenAction()
+}
+
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val noteRepository: NoteRepository
+    private val getNotesUseCase: GetNotesUseCase,
+    private val saveNoteUseCase: SaveNoteUseCase,
+    private val deleteNoteUseCase: DeleteNoteUseCase
 ) : ViewModel() {
-    val screenState = noteRepository.getAllNotes()
+
+    val screenState = getNotesUseCase()
         .map { notes ->
             if (notes.isEmpty()) MainScreenState.Empty
             else MainScreenState.Content(notes)
@@ -27,26 +44,28 @@ class MainViewModel @Inject constructor(
 
     fun dispatch(action: MainScreenAction) {
         when (action) {
-            is MainScreenAction.Delete -> {
-                (screenState.value as? MainScreenState.Content)?.let { contentState ->
-                    val noteToDelete = contentState.notes.find { it.id == action.id }
-                    noteToDelete?.let { note ->
-                        viewModelScope.launch {
-                            noteRepository.deleteNote(note)
-                        }
-                    }
-                }
+            is MainScreenAction.Delete -> deleteNote(action.id)
+            is MainScreenAction.Pin -> pinNote(action.id, action.value)
+        }
+    }
+
+    private fun deleteNote(id: Long) {
+        (screenState.value as? MainScreenState.Content)?.let { contentState ->
+            val noteToDelete = contentState.notes.find { it.id == id } ?: return
+            
+            viewModelScope.launch {
+                deleteNoteUseCase(noteToDelete)
             }
-            is MainScreenAction.Pin -> {
-                (screenState.value as? MainScreenState.Content)?.let { contentState ->
-                    val noteToPin = contentState.notes.find { it.id == action.id }
-                    noteToPin?.let { note ->
-                        val updatedNote = note.copy(pinned = action.value)
-                        viewModelScope.launch {
-                            noteRepository.updateNote(updatedNote)
-                        }
-                    }
-                }
+        }
+    }
+    
+    private fun pinNote(id: Long, isPinned: Boolean) {
+        (screenState.value as? MainScreenState.Content)?.let { contentState ->
+            val noteToPin = contentState.notes.find { it.id == id } ?: return
+            val updatedNote = noteToPin.copy(pinned = isPinned)
+            
+            viewModelScope.launch {
+                saveNoteUseCase(updatedNote, isNew = false)
             }
         }
     }

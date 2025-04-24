@@ -26,6 +26,9 @@ import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import greenfieldxd.noteable.data.repository.FakeNoteRepository
+import greenfieldxd.noteable.domain.usecase.DeleteNoteUseCase
+import greenfieldxd.noteable.domain.usecase.GetNoteByIdUseCase
+import greenfieldxd.noteable.domain.usecase.SaveNoteUseCase
 import greenfieldxd.noteable.presentation.screens.DefaultScreenTransitions
 import greenfieldxd.noteable.presentation.theme.NoteableTheme
 
@@ -38,10 +41,14 @@ fun EditScreen(
     viewModel: EditViewModel = hiltViewModel()
 ) {
     val screenState by viewModel.screenState.collectAsState()
+
+    var canDelete = false
     val note = when (val state = screenState) {
-        is EditScreenState.Loading -> null
-        is EditScreenState.Create -> state.note
-        is EditScreenState.Edit -> state.note
+        is EditScreenState.Empty -> null
+        is EditScreenState.Edit -> {
+            canDelete = !state.isNew
+            state.note
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -70,7 +77,7 @@ fun EditScreen(
                             contentDescription = null
                         )
                     }
-                    if (screenState is EditScreenState.Edit) {
+                    if (canDelete) {
                         IconButton(
                             onClick = {
                                 viewModel.dispatch(EditScreenAction.Delete)
@@ -107,9 +114,16 @@ fun EditScreen(
 @Composable
 fun EditScreenPreview() {
     val fakeRepository = FakeNoteRepository()
-    val fakeViewModel = EditViewModel(fakeRepository)
+    val viewModel = EditViewModel(
+        getNoteByIdUseCase = GetNoteByIdUseCase(fakeRepository),
+        saveNoteUseCase = SaveNoteUseCase(fakeRepository),
+        deleteNoteUseCase = DeleteNoteUseCase(fakeRepository)
+    )
 
     NoteableTheme {
-        EditScreen(navigator = EmptyDestinationsNavigator, viewModel = fakeViewModel)
+        EditScreen(
+            navigator = EmptyDestinationsNavigator, 
+            viewModel = viewModel
+        )
     }
 }

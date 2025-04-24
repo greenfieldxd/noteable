@@ -37,6 +37,9 @@ import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import greenfieldxd.noteable.R
 import greenfieldxd.noteable.data.repository.FakeNoteRepository
 import greenfieldxd.noteable.domain.model.Note
+import greenfieldxd.noteable.domain.usecase.DeleteNoteUseCase
+import greenfieldxd.noteable.domain.usecase.GetNotesUseCase
+import greenfieldxd.noteable.domain.usecase.SaveNoteUseCase
 import greenfieldxd.noteable.presentation.screens.DefaultScreenTransitions
 import greenfieldxd.noteable.presentation.theme.NoteableTheme
 
@@ -83,7 +86,10 @@ fun MainScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(state.notes, key = { it.id }) { note ->
-                            NoteItem(note = note, onClick = { navigator.navigate(EditScreenDestination(id = note.id)) })
+                            NoteItem(
+                                note = note, 
+                                onClick = { navigator.navigate(EditScreenDestination(id = note.id)) }
+                            )
                         }
                     }
                 }
@@ -94,7 +100,10 @@ fun MainScreen(
                             .padding(innerPadding),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(stringResource(R.string.notes_empty), style = MaterialTheme.typography.titleSmall)
+                        Text(
+                            text = stringResource(R.string.notes_empty), 
+                            style = MaterialTheme.typography.titleSmall
+                        )
                     }
                 }
             }
@@ -112,9 +121,10 @@ fun NoteItem(
             .fillMaxWidth()
             .clickable(onClick = onClick)
     ) {
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         ) {
             Text(text = note.title, style = MaterialTheme.typography.bodyLarge)
             Text(text = note.content, style = MaterialTheme.typography.bodySmall)
@@ -126,9 +136,16 @@ fun NoteItem(
 @Composable
 fun MainScreenPreview() {
     val fakeRepository = FakeNoteRepository()
-    val fakeViewModel = MainViewModel(fakeRepository)
+    val viewModel = MainViewModel(
+        getNotesUseCase = GetNotesUseCase(fakeRepository),
+        saveNoteUseCase = SaveNoteUseCase(fakeRepository),
+        deleteNoteUseCase = DeleteNoteUseCase(fakeRepository)
+    )
 
     NoteableTheme {
-        MainScreen(navigator = EmptyDestinationsNavigator, viewModel = fakeViewModel)
+        MainScreen(
+            navigator = EmptyDestinationsNavigator, 
+            viewModel = viewModel
+        )
     }
 }

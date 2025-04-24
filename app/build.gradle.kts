@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
-    alias(libs.plugins.serialization)
 }
 
 android {
@@ -58,9 +57,6 @@ dependencies {
     //Coroutines
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
-
-    //Serialization
-    implementation(libs.kotlinx.serialization.json)
 
     //Room
     implementation(libs.androidx.room.ktx)

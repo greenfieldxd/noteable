@@ -13,28 +13,28 @@ object DefaultScreenTransitions : DestinationStyle.Animated() {
     override val enterTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition? = {
         slideInHorizontally(
             initialOffsetX = { fullWidth -> fullWidth },
-            animationSpec = tween(durationMillis = 300)
+            animationSpec = tween(durationMillis = 150)
         )
     }
 
     override val exitTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition? = {
         slideOutHorizontally(
             targetOffsetX = { fullWidth -> -fullWidth },
-            animationSpec = tween(durationMillis = 300)
+            animationSpec = tween(durationMillis = 150)
         )
     }
 
     override val popEnterTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition? = {
         slideInHorizontally(
             initialOffsetX = { fullWidth -> -fullWidth },
-            animationSpec = tween(durationMillis = 300)
+            animationSpec = tween(durationMillis = 150)
         )
     }
 
     override val popExitTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition? = {
         slideOutHorizontally(
             targetOffsetX = { fullWidth -> fullWidth },
-            animationSpec = tween(durationMillis = 300)
+            animationSpec = tween(durationMillis = 150)
         )
     }
 }
