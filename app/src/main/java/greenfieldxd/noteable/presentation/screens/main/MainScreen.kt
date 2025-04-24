@@ -37,11 +37,11 @@ import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import greenfieldxd.noteable.R
 import greenfieldxd.noteable.data.repository.FakeNoteRepository
 import greenfieldxd.noteable.domain.model.Note
-import greenfieldxd.noteable.presentation.DefaultTransitions
+import greenfieldxd.noteable.presentation.screens.DefaultScreenTransitions
 import greenfieldxd.noteable.presentation.theme.NoteableTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Destination<RootGraph>(start = true, style = DefaultTransitions::class)
+@Destination<RootGraph>(start = true, style = DefaultScreenTransitions::class)
 @Composable
 fun MainScreen(
     navigator: DestinationsNavigator,

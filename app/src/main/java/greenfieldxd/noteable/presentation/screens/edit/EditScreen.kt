@@ -26,11 +26,11 @@ import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import greenfieldxd.noteable.data.repository.FakeNoteRepository
-import greenfieldxd.noteable.presentation.DefaultTransitions
+import greenfieldxd.noteable.presentation.screens.DefaultScreenTransitions
 import greenfieldxd.noteable.presentation.theme.NoteableTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Destination<RootGraph>(style = DefaultTransitions::class)
+@Destination<RootGraph>(style = DefaultScreenTransitions::class)
 @Composable
 fun EditScreen(
     id: Long? = null,
