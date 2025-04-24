@@ -1,4 +1,4 @@
-package greenfieldxd.noteable.presentation.screens
+package greenfieldxd.noteable.presentation.screens.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition

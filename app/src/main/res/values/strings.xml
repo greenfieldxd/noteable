@@ -2,4 +2,7 @@
     <string name="app_name">noteable</string>
     <string name="notes_title">Заметки</string>
     <string name="notes_empty">Заметок пока нет</string>
+    <string name="placeholder_new_note">Новая заметка</string>
+    <string name="placeholder_note">Заголовок</string>
+    <string name="placeholder_content">Напишите что-нибудь...</string>
 </resources>

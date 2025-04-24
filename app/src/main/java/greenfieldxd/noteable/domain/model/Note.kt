@@ -15,7 +15,7 @@ data class Note(
 
 fun defaultNote() = Note(
     id = 0L,
-    title = "Новая заметка",
+    title = "",
     content = "",
     pinned = false,
     noteType = NoteType.Plain,

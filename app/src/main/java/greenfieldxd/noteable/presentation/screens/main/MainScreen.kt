@@ -40,7 +40,7 @@ import greenfieldxd.noteable.domain.model.Note
 import greenfieldxd.noteable.domain.usecase.DeleteNoteUseCase
 import greenfieldxd.noteable.domain.usecase.GetNotesUseCase
 import greenfieldxd.noteable.domain.usecase.SaveNoteUseCase
-import greenfieldxd.noteable.presentation.screens.DefaultScreenTransitions
+import greenfieldxd.noteable.presentation.screens.navigation.DefaultScreenTransitions
 import greenfieldxd.noteable.presentation.theme.NoteableTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

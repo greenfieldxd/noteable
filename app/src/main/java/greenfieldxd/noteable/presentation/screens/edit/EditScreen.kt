@@ -1,10 +1,14 @@
 package greenfieldxd.noteable.presentation.screens.edit
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,12 +16,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,11 +35,13 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
+import greenfieldxd.noteable.R
 import greenfieldxd.noteable.data.repository.FakeNoteRepository
 import greenfieldxd.noteable.domain.usecase.DeleteNoteUseCase
 import greenfieldxd.noteable.domain.usecase.GetNoteByIdUseCase
 import greenfieldxd.noteable.domain.usecase.SaveNoteUseCase
-import greenfieldxd.noteable.presentation.screens.DefaultScreenTransitions
+import greenfieldxd.noteable.presentation.screens.navigation.DefaultScreenTransitions
+import greenfieldxd.noteable.presentation.screens.components.CustomTextField
 import greenfieldxd.noteable.presentation.theme.NoteableTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,10 +55,12 @@ fun EditScreen(
     val screenState by viewModel.screenState.collectAsState()
 
     var canDelete = false
+    var isNew = false
     val note = when (val state = screenState) {
         is EditScreenState.Empty -> null
         is EditScreenState.Edit -> {
             canDelete = !state.isNew
+            isNew = state.isNew
             state.note
         }
     }
@@ -59,14 +73,24 @@ fun EditScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    BasicTextField(
-                        textStyle = MaterialTheme.typography.titleLarge,
+                    CustomTextField(
                         value = note?.title ?: "",
-                        onValueChange = { viewModel.dispatch(EditScreenAction.OnTitleChanged(it)) }
+                        onValueChanged = { viewModel.dispatch(EditScreenAction.OnTitleChanged(it)) },
+                        placeholderText = if (isNew) stringResource(R.string.placeholder_new_note) else stringResource(R.string.placeholder_note),
+                        textStyle = MaterialTheme.typography.titleLarge
                     )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navigator.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null,
+                        )
+                    }
                 },
                 actions = {
                     IconButton(
+                        enabled = note?.let { it.title.isNotBlank() || it.content.isNotBlank() } == true,
                         onClick = {
                             viewModel.dispatch(EditScreenAction.Save)
                             navigator.popBackStack()
@@ -74,7 +98,7 @@ fun EditScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.CheckCircle,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                     if (canDelete) {
@@ -86,11 +110,11 @@ fun EditScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         }
                     }
-                }
+                },
             )
         },
         content = { innerPadding ->
@@ -100,10 +124,14 @@ fun EditScreen(
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp)
             ) {
-                BasicTextField(
-                    modifier = Modifier.fillMaxSize(),
+                CustomTextField(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 8.dp),
                     value = note?.content ?: "",
-                    onValueChange = { viewModel.dispatch(EditScreenAction.OnContentChanged(it)) }
+                    onValueChanged = { viewModel.dispatch(EditScreenAction.OnContentChanged(it)) },
+                    placeholderText = stringResource(R.string.placeholder_content),
+                    textStyle = MaterialTheme.typography.bodyLarge
                 )
             }
         }
