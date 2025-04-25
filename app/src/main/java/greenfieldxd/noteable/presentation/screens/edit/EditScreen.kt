@@ -80,6 +80,7 @@ fun EditScreen(
                         textStyle = MaterialTheme.typography.headlineLarge
                     )
                 },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
                 navigationIcon = {
                     IconButton(onClick = { navigator.popBackStack() }) {
                         Icon(

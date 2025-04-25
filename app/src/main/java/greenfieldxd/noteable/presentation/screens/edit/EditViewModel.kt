@@ -81,7 +81,7 @@ class EditViewModel @Inject constructor(
         (screenState.value as? EditScreenState.Edit)?.let { state ->
             viewModelScope.launch {
                 _noteState.value?.let { note ->
-                    saveNoteUseCase(note, state.isNew)
+                    saveNoteUseCase(note.copy(updatedAt = System.currentTimeMillis()), state.isNew)
                 }
             }
         }

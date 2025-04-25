@@ -13,9 +13,9 @@ data class NoteEntity(
     val title: String,
     val content: String,
     val pinned: Boolean,
-    val noteType: NoteType = NoteType.Plain,
+    val noteType: NoteType,
     val color: Color,
-    val updatedAt: Long = System.currentTimeMillis()
+    val updatedAt: Long
 ) {
     companion object {
         const val NOTE_TABLE_NAME = "NOTE_TABLE_NAME"
