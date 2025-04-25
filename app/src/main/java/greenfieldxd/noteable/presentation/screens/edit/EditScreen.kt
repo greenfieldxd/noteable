@@ -77,7 +77,7 @@ fun EditScreen(
                         value = note?.title ?: "",
                         onValueChanged = { viewModel.dispatch(EditScreenAction.OnTitleChanged(it)) },
                         placeholderText = if (isNew) stringResource(R.string.placeholder_new_note) else stringResource(R.string.placeholder_note),
-                        textStyle = MaterialTheme.typography.titleLarge
+                        textStyle = MaterialTheme.typography.headlineLarge
                     )
                 },
                 navigationIcon = {

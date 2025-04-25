@@ -5,4 +5,10 @@
     <string name="placeholder_new_note">Новая заметка</string>
     <string name="placeholder_note">Заголовок</string>
     <string name="placeholder_content">Напишите что-нибудь...</string>
+    <string name="pin">Закрепить</string>
+    <string name="unpin">Открепить</string>
+    <string name="pinned">Закрепленная заметка</string>
+    <string name="delete">Удалить</string>
+    <string name="untitled_note">Без названия</string>
+    <string name="add_note">Добавить заметку</string>
 </resources>

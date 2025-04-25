@@ -8,7 +8,6 @@ import greenfieldxd.noteable.domain.usecase.DeleteNoteUseCase
 import greenfieldxd.noteable.domain.usecase.GetNotesUseCase
 import greenfieldxd.noteable.domain.usecase.SaveNoteUseCase
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -21,7 +20,7 @@ sealed class MainScreenState {
 
 sealed class MainScreenAction {
     data class Delete(val id: Long) : MainScreenAction()
-    data class Pin(val id: Long, val value: Boolean) : MainScreenAction()
+    data class Pin(val id: Long) : MainScreenAction()
 }
 
 @HiltViewModel
@@ -45,7 +44,7 @@ class MainViewModel @Inject constructor(
     fun dispatch(action: MainScreenAction) {
         when (action) {
             is MainScreenAction.Delete -> deleteNote(action.id)
-            is MainScreenAction.Pin -> pinNote(action.id, action.value)
+            is MainScreenAction.Pin -> pinNote(action.id)
         }
     }
 
@@ -59,10 +58,10 @@ class MainViewModel @Inject constructor(
         }
     }
     
-    private fun pinNote(id: Long, isPinned: Boolean) {
+    private fun pinNote(id: Long) {
         (screenState.value as? MainScreenState.Content)?.let { contentState ->
             val noteToPin = contentState.notes.find { it.id == id } ?: return
-            val updatedNote = noteToPin.copy(pinned = isPinned)
+            val updatedNote = noteToPin.copy(pinned = !noteToPin.pinned)
             
             viewModelScope.launch {
                 saveNoteUseCase(updatedNote, isNew = false)
