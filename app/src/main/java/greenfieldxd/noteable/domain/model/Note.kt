@@ -2,6 +2,7 @@ package greenfieldxd.noteable.domain.model
 
 import androidx.compose.ui.graphics.Color
 import greenfieldxd.noteable.data.storage.model.NoteType
+import greenfieldxd.noteable.presentation.theme.NoteColors
 
 data class Note(
     val id: Long,
@@ -19,6 +20,6 @@ fun defaultNote() = Note(
     content = "",
     pinned = false,
     noteType = NoteType.Plain,
-    color = Color.Unspecified,
+    color = NoteColors.All.random(),
     updatedAt = System.currentTimeMillis()
 )

@@ -1,6 +1,7 @@
 package greenfieldxd.noteable.presentation.screens.edit
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -80,7 +81,7 @@ fun EditScreen(
                         textStyle = MaterialTheme.typography.headlineLarge
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = note?.color ?: MaterialTheme.colorScheme.background),
                 navigationIcon = {
                     IconButton(onClick = { navigator.popBackStack() }) {
                         Icon(
@@ -119,21 +120,26 @@ fun EditScreen(
             )
         },
         content = { innerPadding ->
-            Column (
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(horizontal = 16.dp)
+            Box(
+                modifier = Modifier.fillMaxSize()
+                    .background(color = note?.color ?: MaterialTheme.colorScheme.background)
             ) {
-                CustomTextField(
+                Column (
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(top = 8.dp),
-                    value = note?.content ?: "",
-                    onValueChanged = { viewModel.dispatch(EditScreenAction.OnContentChanged(it)) },
-                    placeholderText = stringResource(R.string.placeholder_content),
-                    textStyle = MaterialTheme.typography.bodyLarge
-                )
+                        .padding(innerPadding)
+                        .padding(16.dp)
+                ) {
+                    CustomTextField(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = 8.dp),
+                        value = note?.content ?: "",
+                        onValueChanged = { viewModel.dispatch(EditScreenAction.OnContentChanged(it)) },
+                        placeholderText = stringResource(R.string.placeholder_content),
+                        textStyle = MaterialTheme.typography.bodyLarge
+                    )
+                }
             }
         }
     )

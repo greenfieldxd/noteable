@@ -14,9 +14,8 @@ fun CustomTextField(
     value: String,
     onValueChanged: (String) -> Unit,
     placeholderText: String,
-    textStyle: TextStyle,
-
-    ) {
+    textStyle: TextStyle
+) {
     BasicTextField(
         modifier = modifier,
         textStyle = textStyle,

@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -96,6 +97,7 @@ fun MainScreen(
     viewModel: MainViewModel = hiltViewModel()
 ) {
     val screenState by viewModel.screenState.collectAsState()
+    val lazyListState = rememberLazyListState()
 
     Scaffold(
         topBar = {
@@ -126,24 +128,26 @@ fun MainScreen(
         content = { innerPadding ->
             when (val state = screenState) {
                 is MainScreenState.Content -> {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding)
-                            .padding(horizontal = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(
-                            items = state.notes,
-                            key = { it.id }
-                        ) { note ->
-                            NoteItem(
-                                note = note,
-                                onClick = { navigator.navigate(EditScreenDestination(id = note.id)) },
-                                onPin = { viewModel.dispatch(MainScreenAction.Pin(id = note.id)) },
-                                onDelete = { viewModel.dispatch(MainScreenAction.Delete(id = note.id)) },
-                                modifier = Modifier.animateItem()
-                            )
+                    Box(modifier = Modifier.padding(innerPadding)) {
+                        LazyColumn(
+                            state = lazyListState,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(
+                                items = state.notes,
+                                key = { it.id }
+                            ) { note ->
+                                NoteItem(
+                                    note = note,
+                                    onClick = { navigator.navigate(EditScreenDestination(id = note.id)) },
+                                    onPin = { viewModel.dispatch(MainScreenAction.Pin(id = note.id)) },
+                                    onDelete = { viewModel.dispatch(MainScreenAction.Delete(id = note.id)) },
+                                    modifier = Modifier.animateItem()
+                                )
+                            }
                         }
                     }
                 }
@@ -162,7 +166,6 @@ fun MainScreen(
                                 imageVector = Icons.AutoMirrored.Filled.Note,
                                 contentDescription = null,
                                 modifier = Modifier.size(48.dp),
-                                tint = MaterialTheme.colorScheme.primary
                             )
                             Text(
                                 text = stringResource(R.string.notes_empty),

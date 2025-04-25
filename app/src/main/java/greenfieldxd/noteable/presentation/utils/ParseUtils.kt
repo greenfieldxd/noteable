@@ -6,8 +6,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 fun Long.toDateTime(): String {
-    val millis = System.currentTimeMillis()
-    val dateTime: LocalDateTime = Instant.ofEpochMilli(millis)
+    val dateTime: LocalDateTime = Instant.ofEpochMilli(this)
         .atZone(ZoneId.systemDefault())
         .toLocalDateTime()
 
