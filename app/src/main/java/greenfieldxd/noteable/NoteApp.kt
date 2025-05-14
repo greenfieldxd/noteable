@@ -8,8 +8,5 @@ import kotlinx.coroutines.SupervisorJob
 
 @HiltAndroidApp
 class NoteApp : Application() {
-
-    companion object {
-        val applicationScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-    }
+    val applicationScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 }

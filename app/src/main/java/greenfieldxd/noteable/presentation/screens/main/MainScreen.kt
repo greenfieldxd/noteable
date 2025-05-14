@@ -92,7 +92,7 @@ fun MainScreen(
                             .padding(16.dp),
                         state = lazyListState,
                         verticalArrangement = Arrangement.spacedBy(12.dp),
-                        contentPadding = PaddingValues(bottom = innerPadding.calculateBottomPadding())
+                        contentPadding = PaddingValues(top = 8.dp, bottom = 8.dp)
                     ) {
                         items(
                             items = state.notes,

@@ -28,6 +28,7 @@ sealed class EditScreenAction {
 
 @HiltViewModel
 class EditViewModel @Inject constructor(
+    private val applicationScope: CoroutineScope,
     private val getNoteByIdUseCase: GetNoteByIdUseCase,
     private val saveNoteUseCase: SaveNoteUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase
@@ -81,7 +82,7 @@ class EditViewModel @Inject constructor(
 
     private fun saveNote() {
         (screenState.value as? EditScreenState.Edit)?.let { state ->
-            NoteApp.applicationScope.launch {
+            applicationScope.launch {
                 _noteState.value?.let { note ->
                     saveNoteUseCase(note.copy(updatedAt = System.currentTimeMillis()), state.isNew)
                 }
@@ -90,7 +91,7 @@ class EditViewModel @Inject constructor(
     }
 
     private fun deleteNote() {
-        NoteApp.applicationScope.launch {
+        applicationScope.launch {
             _noteState.value?.let { note ->
                 deleteNoteUseCase(note)
             }

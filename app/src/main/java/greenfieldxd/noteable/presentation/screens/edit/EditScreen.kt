@@ -45,6 +45,9 @@ import greenfieldxd.noteable.domain.usecase.SaveNoteUseCase
 import greenfieldxd.noteable.presentation.screens.navigation.DefaultScreenTransitions
 import greenfieldxd.noteable.presentation.screens.components.CustomTextField
 import greenfieldxd.noteable.presentation.theme.NoteableTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Destination<RootGraph>(style = DefaultScreenTransitions::class)
@@ -151,6 +154,7 @@ fun EditScreen(
 fun EditScreenPreview() {
     val fakeRepository = FakeNoteRepository()
     val viewModel = EditViewModel(
+        applicationScope = CoroutineScope(Dispatchers.Default + SupervisorJob()),
         getNoteByIdUseCase = GetNoteByIdUseCase(fakeRepository),
         saveNoteUseCase = SaveNoteUseCase(fakeRepository),
         deleteNoteUseCase = DeleteNoteUseCase(fakeRepository)
