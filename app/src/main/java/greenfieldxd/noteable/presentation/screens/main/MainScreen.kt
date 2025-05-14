@@ -3,6 +3,7 @@ package greenfieldxd.noteable.presentation.screens.main
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -84,28 +85,29 @@ fun MainScreen(
         content = { innerPadding ->
             when (val state = screenState) {
                 is MainScreenState.Content -> {
-                    Box(modifier = Modifier.padding(innerPadding)) {
-                        LazyColumn(
-                            state = lazyListState,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            items(
-                                items = state.notes,
-                                key = { it.id }
-                            ) { note ->
-                                NoteItem(
-                                    note = note,
-                                    onClick = { navigator.navigate(EditScreenDestination(id = note.id)) },
-                                    onPin = { viewModel.dispatch(MainScreenAction.Pin(id = note.id)) },
-                                    onDelete = { viewModel.dispatch(MainScreenAction.Delete(id = note.id)) },
-                                    modifier = Modifier.animateItem()
-                                )
-                            }
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                            .padding(16.dp),
+                        state = lazyListState,
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        contentPadding = PaddingValues(bottom = innerPadding.calculateBottomPadding())
+                    ) {
+                        items(
+                            items = state.notes,
+                            key = { it.id }
+                        ) { note ->
+                            NoteItem(
+                                modifier = Modifier.animateItem(),
+                                note = note,
+                                onClick = { navigator.navigate(EditScreenDestination(id = note.id)) },
+                                onPin = { viewModel.dispatch(MainScreenAction.Pin(id = note.id)) },
+                                onDelete = { viewModel.dispatch(MainScreenAction.Delete(id = note.id)) }
+                            )
                         }
                     }
+
                 }
                 MainScreenState.Empty -> {
                     Box(

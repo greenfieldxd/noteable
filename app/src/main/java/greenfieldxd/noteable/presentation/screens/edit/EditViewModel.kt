@@ -3,11 +3,13 @@ package greenfieldxd.noteable.presentation.screens.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import greenfieldxd.noteable.NoteApp
 import greenfieldxd.noteable.domain.model.Note
 import greenfieldxd.noteable.domain.model.defaultNote
 import greenfieldxd.noteable.domain.usecase.DeleteNoteUseCase
 import greenfieldxd.noteable.domain.usecase.GetNoteByIdUseCase
 import greenfieldxd.noteable.domain.usecase.SaveNoteUseCase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -79,7 +81,7 @@ class EditViewModel @Inject constructor(
 
     private fun saveNote() {
         (screenState.value as? EditScreenState.Edit)?.let { state ->
-            viewModelScope.launch {
+            NoteApp.applicationScope.launch {
                 _noteState.value?.let { note ->
                     saveNoteUseCase(note.copy(updatedAt = System.currentTimeMillis()), state.isNew)
                 }
@@ -88,7 +90,7 @@ class EditViewModel @Inject constructor(
     }
 
     private fun deleteNote() {
-        viewModelScope.launch {
+        NoteApp.applicationScope.launch {
             _noteState.value?.let { note ->
                 deleteNoteUseCase(note)
             }
