@@ -21,11 +21,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.toColor
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
@@ -49,24 +47,18 @@ import kotlinx.coroutines.SupervisorJob
 @Composable
 fun EditScreen(
     id: Long? = null,
-    backgroundColor: Int? = null,
+    backgroundColor: Color? = null,
     navigator: DestinationsNavigator,
     viewModel: EditViewModel = hiltViewModel()
 ) {
     val screenState by viewModel.screenState.collectAsStateWithLifecycle()
 
-    var canDelete = false
-    var isNew = false
-    val note = when (val state = screenState) {
-        is EditScreenState.Empty -> null
-        is EditScreenState.Edit -> {
-            canDelete = !state.isNew
-            isNew = state.isNew
-            state.note
-        }
+    val (note, isNew, canDelete) = when (val state = screenState) {
+        is EditScreenState.Edit -> Triple(state.note, state.isNew, !state.isNew)
+        is EditScreenState.Empty -> Triple(null, true, false)
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(id) {
         viewModel.setNoteId(id)
     }
 
@@ -86,9 +78,7 @@ fun EditScreen(
                         textStyle = MaterialTheme.typography.headlineLarge
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = backgroundColor?.let { Color(it) } ?: MaterialTheme.colorScheme.background
-                ),
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = backgroundColor ?: MaterialTheme.colorScheme.background),
                 navigationIcon = {
                     IconButton(onClick = {
                         viewModel.dispatch(EditScreenAction.Save)
@@ -121,7 +111,7 @@ fun EditScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = backgroundColor?.let { Color(it) } ?: MaterialTheme.colorScheme.background)
+                    .background(color = backgroundColor ?: MaterialTheme.colorScheme.background)
             ) {
                 Column (
                     modifier = Modifier
